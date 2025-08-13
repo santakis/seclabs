@@ -1,0 +1,16 @@
+{% extends 'seclabs-login-theme.html' %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}GoodBye{% endblock %}
+
+{% block login %}
+    <div class="container">
+        <div class="text-center align-items-center pt-5 mt-5">
+            <img src="{% static 'dashboard/img/bye.png' %}" width="256" alt="GoodBye!"/>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}<script type="text/javascript">setTimeout(function() {window.location = "/";}, 800);</script>{% endblock %}

@@ -1,0 +1,148 @@
+{% extends "seclabs-dashboard-theme.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'Create User' %}{% endblock %}
+{% block description %}{% trans 'User form for creating a New User.' %}{% endblock %}
+
+{% block style %}{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% block dashboard %}
+<div class="col-8 mx-auto mt-3">
+    <form class="card" action={% url 'dashboard_users_create' %} method="post" novalidate>{% csrf_token %}
+        <div class="card-header text-center lead bd-0 tx-white bg-black-9">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+            </svg>
+            &nbsp;{% trans 'Create User' %}
+        </div>
+        <div class="card-body border-bottom py-3">
+            <div class="row">
+                <div class="col-md-12 mx-auto">
+                    <fieldset class="row form-fieldset">
+                        <div class="col-md-6 mr-auto">
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'First Name' %}</label>
+                                {{form.first_name}}
+                                {% if form.first_name.errors %}
+                                <span class="small text-red" id="e_first_name">{{form.first_name.errors}}</span>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Username' %}</label>
+                                {{form.username}}
+                                {% if form.username.errors %}
+                                <span class="small text-red" id="e_username">{{form.username.errors}}</span>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Title' %}</label>
+                                {{form.title}}
+                                {% if form.title.errors %}
+                                <span class="small text-red" id="e_title">{{form.title.errors}}</span>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Enter Password' %}</label>
+                                {{form.password1}}
+                                {% if form.password1.errors %}
+                                <span class="small text-red" id="e_password1">{{form.password1.errors}}</span>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Location' %}</label>
+                                {{form.location}}
+                                {% if form.location.errors %}
+                                <span class="small text-red" id="e_location">{{form.location.errors}}</span>
+                                {% endif %}
+                            </div>
+                       </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Last Name' %}</label>
+                                {{form.last_name}}
+                                {% if form.last_name.errors %}
+                                <span class="small text-red" id="e_last_name">{{form.last_name.errors}}</span>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Email Address' %}</label>
+                                {{form.email}}
+                                {% if form.email.errors %}
+                                <span class="small text-red" id="e_email">{{form.email.errors}}</span>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Company' %}</label>
+                                {{form.company}}
+                                {% if form.company.errors %}
+                                <span class="small text-red" id="e_company">{{form.company.errors}}</span>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Confirm Password' %}</label>
+                                {{form.password2}}
+                                {% if form.password2.errors %}
+                                <span class="small text-red" id="e_password2">{{form.password2.errors}}</span>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Timezone' %}</label>
+                                {{form.timezone}}
+                                {% if form.timezone.errors %}
+                                <span class="small text-red" id="e_timezone">{{form.timezone.errors}}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="py-3 d-flex justify-content-end">
+                                <label class="form-check form-check-inline">
+                                    {{form.is_active}}
+                                    <span class="form-check-label">{% trans 'Active Login' %}</span>
+                                    {% if form.is_active.errors %}
+                                    <span class="small text-red" id="e_is_active">{{form.is_active.errors}}</span>
+                                    {% endif %}
+                                </label>
+                                <label class="form-check form-check-inline">
+                                    {{form.is_superuser}}
+                                    <span class="form-check-label">{% trans 'Super User' %}</span>
+                                    {% if form.is_superuser.errors %}
+                                    <span class="small text-red" id="e_is_superuser">{{form.is_superuser.errors}}</span>
+                                    {% endif %}
+                                </label>
+                                <label class="form-check form-check-inline">
+                                    {{form.is_staff}}
+                                    <span class="form-check-label bg-gray">{% trans 'Staff User' %}</span>
+                                    {% if form.is_staff.errors %}
+                                    <span class="small text-red" id="e_is_staff">{{form.is_staff.errors}}</span>
+                                    {% endif %}
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <a href="{% url 'dashboard_users'%}" class="btn btn-light d-block d-md-inline-block mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+                &nbsp;{% trans 'Cancel' %}
+            </a>
+            <button type="submit" class="full-width btn btn-black d-block d-md-inline-block mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+                &nbsp;{% trans 'Create User' %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
