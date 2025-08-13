@@ -93,7 +93,7 @@ class Jira:
         after performing all relevant calls.
         """
         url ="group/bulk"
-        opts = "?maxResults=1000&startAt=" + str(offset)
+        opts = "?maxResults=50&startAt=" + str(offset)
     
         try:
             response = requests.get(self.api + url + opts, headers=self.headers, auth=self.auth)
@@ -101,8 +101,8 @@ class Jira:
             for entry in response.json()["values"]:
                 data.append(entry)
 
-            if len(response.json()) == 1000:
-                offset = offset + 1000
+            if len(response.json()["values"]) == 50:
+                offset = offset + 50
                 self.get_groups(offset, data)
 
         except Exception as e:
@@ -119,7 +119,7 @@ class Jira:
         users = list()
 
         url = "group/member/?groupId=" + str(group_id)
-        opts = "&maxResults=1000"
+        opts = "&maxResults=50"
     
         try:
             response = requests.get(self.api + url + opts, headers=self.headers, auth=self.auth)

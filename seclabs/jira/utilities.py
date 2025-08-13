@@ -14,6 +14,6 @@ def jira_update_data():
     The method jira_update_data is updating all models under jira app
     with latest available data.
     """
-    #JiraUser().update()
+    JiraUser().update()
     JiraGroup().update()
 

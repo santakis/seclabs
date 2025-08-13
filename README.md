@@ -1,5 +1,4 @@
-<h1> 
-  <img src='https://raw.githubusercontent.com/santakis/seclabs/master/seclabs/dashboard/static/dashboard/img/seclabs-big.png' width="48"/>
-  &nbsp;seclabs
-</h1>
+<p align="center"> 
+  <img src='https://raw.githubusercontent.com/santakis/seclabs/master/images/seclabs-login.png'/>
+</p>
 
