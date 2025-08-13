@@ -1,0 +1,71 @@
+{% extends "seclabs-dashboard-theme.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'Create Access Key' %}{% endblock %}
+{% block description %}{% trans 'Access Key form for creating a New Access Key.' %}{% endblock %}
+
+{% block style %}{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% block dashboard %}
+<div class="col-sm-12 col-md-8 col-lg-6 col-xl-5 mx-auto mt-3">
+    <form class="card" action={% url 'dashboard_accesskeys_create' %} method="post" novalidate>{% csrf_token %}
+        <div class="card-header text-center lead bd-0 tx-white bg-black-9">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
+                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
+            </svg>
+            &nbsp;{% trans 'Create Access Key' %}
+        </div>
+        <div class="card-body border-bottom py-3">
+            <div class="row">
+                <div class="col-md-12 mx-auto">
+                    <fieldset class="row form-fieldset">
+                        <div class="col-md-12 mr-auto">
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Account' %}</label>
+                                {{form.account}}
+                                {% if form.account.errors %}
+                                <span class="small text-red" id="e_user">{{form.account.errors}}</span>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Secret Key' %}</label>
+                                {{form.key}}
+                                {% if form.key.errors %}
+                                <span class="small text-red" id="e_key">{{form.key.errors}}</span>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{% trans 'Service' %}</label>
+                                {{form.service}}
+                                {% if form.service.errors %}
+                                <span class="small text-red" id="e_service">{{form.service.errors}}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <a href="{% url 'dashboard_accesskeys'%}" class="btn btn-light d-block d-md-inline-block mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+                &nbsp;{% trans 'Cancel' %}
+            </a>
+            <button type="submit" class="full-width btn btn-black d-block d-md-inline-block mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+                &nbsp;{% trans 'Create Access Key' %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

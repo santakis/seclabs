@@ -1,0 +1,37 @@
+{% load static %}
+{% load i18n %}
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="{% block description %}{% endblock %}">
+        <meta name="author" content="seclabs-team">
+
+        <title>seclabs: {% block title %}{% trans 'Oops, internal error!' %}{% endblock %}</title>
+
+        <link rel="icon" href="{% static 'dashboard/img/favicon.ico' %}" type="image/x-icon">
+        <link rel="stylesheet" href="{% static 'dashboard/css/seclabs.css' %}">
+        <link rel="stylesheet" href="{% static 'dashboard/css/animate.min.css' %}">
+        {% block style %}{% endblock %}
+    </head>
+
+    <body class="antialiased border-top-wide border-secondary d-flex flex-column pt-5">
+        <div class="flex-fill d-flex align-items-center justify-content-center pt-5">
+            <div class="container-tight py-6 mt-5 pt-5">
+                <img src="{% static 'dashboard/img/500.png' %}" width="256" alt="500">
+                <br><br><br/>
+                <h4 class="text-center mb-5 animate__animated animate__shakeY">{% trans 'Oops, internal error!' %}</h4>
+                <div class="text-center">
+                    <a href="{% url "dashboard_index" %}" class="btn btn-black">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="5" y1="12" x2="19" y2="12" /><line x1="5" y1="12" x2="11" y2="18" /><line x1="5" y1="12" x2="11" y2="6" /></svg>
+                        {% trans 'Take me home' %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <script src="{% static 'dashboard/js/seclabs.js' %}"></script>
+        {% block javascript %}{% endblock %}
+    </body>
+</html>
