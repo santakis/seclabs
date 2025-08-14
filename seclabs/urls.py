@@ -15,6 +15,7 @@ urlpatterns = [
     path('', include('seclabs.users.urls')),
     path('', include('seclabs.config.urls')),
     path('', include('seclabs.jira.urls')),
+    path('', include('seclabs.asana.urls')),
     path('', include('seclabs.dashboard.urls')),
 ]
 

@@ -9,9 +9,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext as _
 from django.utils.timezone import make_aware
-
 #/////////////////////////////////////////////////////////////
-from seclabs.config.utilities import get_key
 from seclabs.jira.api import Jira
 
 #/////////////////////////////////////////////////////////////
@@ -20,18 +18,18 @@ logger = logging.getLogger(__name__)
 #/////////////////////////////////////////////////////////////
 class JiraUser(models.Model):
     """
-    The JiraUser model holds specific information from Jira users
-    which are relevant to security processes such as Off-Boarding,
-    On-Boarding.
+    The JiraUser model holds specific information from Jira user.
     """
     account_id = models.CharField(max_length=255, unique=True)
     full_name = models.CharField(max_length=255)
     email = models.CharField(max_length=255, blank=True, null=True)  
     avatar_url = models.CharField(max_length=255) 
+    #--
     account_type = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
     groups = models.TextField(blank=True,null=True)
     no_groups = models.IntegerField(default=0)
+    #--
     modified = models.DateTimeField(auto_now=True)
 
     class Meta:
