@@ -11,7 +11,6 @@ An automation platform that aims to provide **security reporting** for different
 <table align="center">
   <tr>
     <td><img src='https://raw.githubusercontent.com/santakis/seclabs/master/images/seclabs-login.png'/></td>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><img src='https://raw.githubusercontent.com/santakis/seclabs/master/images/seclabs-menu.png'/></td>
    </tr> 
 </table>
