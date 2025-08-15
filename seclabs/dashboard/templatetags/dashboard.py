@@ -12,14 +12,14 @@ logger = logging.getLogger(__name__)
 register = Library()
 
 #/////////////////////////////////////////////////////////////
-@register.filter(name='count')
-def count(user_account_types, atype):
+@register.filter(name='split')
+@stringfilter
+def split(value, delimiter):
     """
-    It counts the appearances of an atype (account_type) into the stored 
-    list of user_account_types. If exception occurs return 0.
+    Split value based on the given delimiter. If exception occurs return None.
     """
     try:
-        return user_account_types.count(atype)
+        return value.split(delimiter)
     except:
-        return 0
+        return None
 

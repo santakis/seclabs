@@ -10,89 +10,91 @@
 {% block javascript %}{% endblock %}
 
 {% block dashboard %}
-<div class="col-md-12 mx-auto mt-3">
-    <div class="row align-items-center mb-3">
-        <div class="col">
-            {% if search %}<span class="bg-light text-dark p-2">{% trans 'The following results were found.' %}</span>{% endif %}
-            {% if query and not search %}<span class="bg-light text-danger p-2">{% trans 'No results found.' %}</span>{% endif %}
-        </div>
-        <div class="col-auto ml-auto">
-            <div class="d-flex">
-                {% if request.user.is_superuser %}
-                <a href="{% url 'dashboard_accesskeys_create' %}" class="btn btn-az-primary mx-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    {% trans 'New Access Key' %}
-                </a>
-                {% endif %}
-                <form action="{% url 'dashboard_accesskeys' %}" method="get" class="mx-2">
-                    <div class="input-icon input-group">
-                        <input type="text" name="q" value="{{query}}" tabindex="1" autocomplete="off" class="form-control d-inline-block w-9" placeholder="{% trans 'Search Access Keys ...'%}">
-                        <span class="input-group-btn">
-                            <button class="p-0 px-2 btn btn-black" type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
-                             </button>
-                        </span>
-                    </div>
-                </form>
-           </div>
-        </div>
-    </div>
-    
-    <div class="card">
-        <div class="card-header text-center lead bd-0 tx-white bg-black-9">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-lock2" viewBox="0 0 16 16">
-                <path d="M10 7v1.076c.54.166 1 .597 1 1.224v2.4c0 .816-.781 1.3-1.5 1.3h-3c-.719 0-1.5-.484-1.5-1.3V9.3c0-.627.46-1.058 1-1.224V7a2 2 0 1 1 4 0zM7 7v1h2V7a1 1 0 0 0-2 0z"/>  
-                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
-            </svg>
-            &nbsp;{% trans 'Access Keys' %}&nbsp;<span class="small text-pink">({{total}})</span>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-vcenter table-mobile-md card-table">
-                    <thead>
-                        <tr>
-                            <th class="text-left">{% trans 'Account' %}</th>
-                            <th class="text-left">{% trans 'Key' %}</th>
-                            <th class="text-left">{% trans 'Service' %}</th>
-                            <th class="text-left">{% trans 'Created' %}</th>
-                            <th class="text-left">{% trans 'Modified' %}</th>
-                            <th class="w-1 text-center">{% if request.user.is_superuser %}{% trans 'Actions' %}{% endif %}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for accesskey in accesskeys %}
-                        <tr>
-                            <td class="text-left"><div>{{accesskey.account}}</div></td>
-                            <td class="text-left"><div class="text-muted"><i>{% trans 'encrypyed aes256-gcm' %}</i></div></td>
-                            <td class="text-left"><span class="tx-bold">{{accesskey.service}}</span></td>
-                            <td class="text-left">{{accesskey.created}}</td>
-                            <td class="text-left">{{accesskey.modified}}</td>
-                            <td class="text-center">
-                                {% if request.user.is_superuser %}
-                                <div class="btn-list flex-nowrap">
-                                    <a href="{% url 'dashboard_accesskeys_edit' accesskey.id %}" class="mx-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
-                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
-                                        </svg>
-                                    </a>
-                                    <a href="{% url 'dashboard_accesskeys_delete' accesskey.id %}" class="mx-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                                {% endif %}
-                           </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+<div class="container">
+    <div class="col-md-12 mx-auto mt-3">
+        <div class="row align-items-center mb-3">
+            <div class="col">
+                {% if search %}<span class="bg-light text-dark p-2">{% trans 'The following results were found.' %}</span>{% endif %}
+                {% if query and not search %}<span class="bg-light text-danger p-2">{% trans 'No results found.' %}</span>{% endif %}
+            </div>
+            <div class="col-auto ml-auto">
+                <div class="d-flex">
+                    {% if request.user.is_superuser %}
+                    <a href="{% url 'dashboard_accesskeys_create' %}" class="btn btn-az-primary mx-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        {% trans 'New Access Key' %}
+                    </a>
+                    {% endif %}
+                    <form action="{% url 'dashboard_accesskeys' %}" method="get" class="mx-2">
+                        <div class="input-icon input-group">
+                            <input type="text" name="q" value="{{query}}" tabindex="1" autocomplete="off" class="form-control d-inline-block w-9" placeholder="{% trans 'Search Access Keys ...'%}">
+                            <span class="input-group-btn">
+                                <button class="p-0 px-2 btn btn-black" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
+                                 </button>
+                            </span>
+                        </div>
+                    </form>
+               </div>
             </div>
         </div>
+        
+        <div class="card">
+            <div class="card-header text-center lead bd-0 tx-white bg-black-9">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-lock2" viewBox="0 0 16 16">
+                    <path d="M10 7v1.076c.54.166 1 .597 1 1.224v2.4c0 .816-.781 1.3-1.5 1.3h-3c-.719 0-1.5-.484-1.5-1.3V9.3c0-.627.46-1.058 1-1.224V7a2 2 0 1 1 4 0zM7 7v1h2V7a1 1 0 0 0-2 0z"/>  
+                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                </svg>
+                &nbsp;{% trans 'Access Keys' %}&nbsp;<span class="small text-pink">({{total}})</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-vcenter table-mobile-md card-table">
+                        <thead>
+                            <tr>
+                                <th class="text-left">{% trans 'Account' %}</th>
+                                <th class="text-left">{% trans 'Key' %}</th>
+                                <th class="text-left">{% trans 'Service' %}</th>
+                                <th class="text-left">{% trans 'Created' %}</th>
+                                <th class="text-left">{% trans 'Modified' %}</th>
+                                <th class="w-1 text-center">{% if request.user.is_superuser %}{% trans 'Actions' %}{% endif %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for accesskey in accesskeys %}
+                            <tr>
+                                <td class="text-left"><div>{{accesskey.account}}</div></td>
+                                <td class="text-left"><div class="text-muted"><i>{% trans 'encrypyed aes256-gcm' %}</i></div></td>
+                                <td class="text-left"><span class="tx-bold">{{accesskey.service}}</span></td>
+                                <td class="text-left">{{accesskey.created}}</td>
+                                <td class="text-left">{{accesskey.modified}}</td>
+                                <td class="text-center">
+                                    {% if request.user.is_superuser %}
+                                    <div class="btn-list flex-nowrap">
+                                        <a href="{% url 'dashboard_accesskeys_edit' accesskey.id %}" class="mx-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
+                                            </svg>
+                                        </a>
+                                        <a href="{% url 'dashboard_accesskeys_delete' accesskey.id %}" class="mx-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                               </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {% include "dashboard/dashboard-pagination.html" with pages=accesskeys search=search query=query page_range=page_range %}
+
     </div>
-
-    {% include "dashboard/dashboard-pagination.html" with pages=accesskeys search=search query=query page_range=page_range %}
-
 </div>
 {% endblock %}

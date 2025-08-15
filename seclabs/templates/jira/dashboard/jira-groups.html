@@ -4,6 +4,7 @@
 {% load i18n %}
 
 {% load jira %}
+{% load dashboard %}
 
 {% block title %}{% trans 'Jira Groups' %}{% endblock %}
 {% block description %}{% trans 'The list of all Jira groups under the organization.' %}{% endblock %}
@@ -12,16 +13,15 @@
 {% block javascript %}{% endblock %}
 
 {% block jira %}
-
 <div class="col-md-12 mx-auto mt-3">
 
-    <div class="row align-items-center mb-3">
-        <div class="col">
+    <div class="row align-items-center">
+        <div class="col mb-3">
             {% if search %}<span class="bg-light text-dark p-2">{% trans 'The following results were found.' %}</span>{% endif %}
             {% if query and not search %}<span class="bg-light text-danger p-2">{% trans 'No results found.' %}</span>{% endif %}
             {% if not search and not query %}{% if groups %}<span class="text-muted pr-2">{% trans 'Last Updated:'%}</span>{{groups.0.modified}}{% endif %}{% endif %}
         </div>
-        <div class="col-auto ml-auto">
+        <div class="col-auto mb-3 ml-auto">
             <div class="d-flex">
                 <form action="{% url 'dashboard_jira_groups' %}" method="get" class="mx-2">
                     <div class="input-icon input-group">
@@ -64,10 +64,10 @@
                             </td>
                             <td class="text-center tx-tooltip text-number">
                                 {{group.no_users}}
-                                {% if group.user_names %}<span class="text-left">{% for user in group.user_names|split:"," %}{{forloop.counter}}. {{user}}<br/>{% endfor %}</span>{% endif %}
+                                {% if group.user_names %}<span class="text-left"><b>{{group.group_name}}</b><br>{% for user in group.user_names|split:"," %}{{forloop.counter}}. {{user}}<br>{% endfor %}</span>{% endif %}
                             </td>
-                            <td class="text-center"><span class=" text-number">{{group.user_account_types|count:"atlassian"}}</td>
-                            <td class="text-center"><span class="text-number">{{group.user_account_types|count:"app"}}</td>
+                            <td class="text-center"><span class=" text-number">{{group.user_account_types|count:"atlassian"}}</span></td>
+                            <td class="text-center"><span class="text-number">{{group.user_account_types|count:"app"}}</span></td>
                             <td class="text-center">{{group.group_id}}</td>
                         </tr>
                         {% endfor %}
@@ -79,4 +79,5 @@
  
     {% include "dashboard/dashboard-pagination.html" with pages=groups search=search query=query page_range=page_range %}
 
+</div>
 {% endblock %}

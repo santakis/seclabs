@@ -143,6 +143,7 @@ INSTALLED_APPS = [
     'seclabs.config',
     'seclabs.jira',
     'seclabs.asana',
+    'seclabs.jumpcloud',
     'seclabs.dashboard',
 ]
 

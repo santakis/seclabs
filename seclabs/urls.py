@@ -16,6 +16,7 @@ urlpatterns = [
     path('', include('seclabs.config.urls')),
     path('', include('seclabs.jira.urls')),
     path('', include('seclabs.asana.urls')),
+    path('', include('seclabs.jumpcloud.urls')),
     path('', include('seclabs.dashboard.urls')),
 ]
 

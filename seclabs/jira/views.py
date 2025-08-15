@@ -30,15 +30,7 @@ def jira_index(request):
     The main index page for Jira app within the seclabs dashboard.
     """
     log_request(request)
-
-    users = JiraUser.objects.all()
-
-    response = {
-        "users":users,
-        "groups":JiraGroup.objects.all().count(),
-    }
-
-    return render(request, 'jira/dashboard/jira-index.html', response)
+    return render(request, 'jira/dashboard/jira-index.html')
 
 #/////////////////////////////////////////////////////////////
 @never_cache
@@ -55,19 +47,6 @@ def jira_users(request):
         query = " ".join(request.GET['q'].split())
         search = True
      
-        if 'strict' in request.GET:
-             match request.GET['strict']:
-                case "fullname":
-                    filters = Q(full_name__icontains=query)
-                case "email":
-                    filters = Q(email__icontains=query)
-                case "atype":
-                    filters = Q(account_type__icontains=query)
-                case "status":
-                    filters = Q(status__icontains=query)
-                case "groups":
-                    filters = Q(groups__icontains=query)
-                
         users = JiraUser.objects.filter(
             Q(account_id__icontains=query)|
             Q(full_name__icontains=query)|
@@ -77,9 +56,6 @@ def jira_users(request):
             Q(groups__icontains=query)
         ).order_by("status")
         
-        if filters:
-            users = JiraUser.objects.filter(filters)
-
     if not query or (query and not users):
         users = JiraUser.objects.order_by("status")
         search = False
@@ -121,15 +97,6 @@ def jira_groups(request):
         query = " ".join(request.GET['q'].split())
         search = True
      
-        if 'strict' in request.GET:
-             match request.GET['strict']:
-                case "name":
-                    filters = Q(group_name__icontains=query)
-                case "email":
-                    filters = Q(user_emails__icontains=query)
-                case "user":
-                    filters = Q(user_names__icontains=query)
-                
         groups = JiraGroup.objects.filter(
             Q(group_id=query)|
             Q(group_name__icontains=query)|
@@ -137,9 +104,6 @@ def jira_groups(request):
             Q(user_emails__icontains=query)
         ).order_by("group_name")
         
-        if filters:
-            groups = JiraUser.objects.filter(filters)
-
     if not query or (query and not groups):
         groups = JiraGroup.objects.order_by("group_name")
         search = False

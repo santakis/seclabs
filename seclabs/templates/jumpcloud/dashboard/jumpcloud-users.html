@@ -1,15 +1,17 @@
-{% extends "asana/dashboard/asana-index.html" %}
+{% extends "jumpcloud/dashboard/jumpcloud-index.html" %}
 
 {% load static %}
 {% load i18n %}
 
-{% block title %}{% trans 'Asana Users' %}{% endblock %}
-{% block description %}{% trans 'The list of all Asana users under the organization.' %}{% endblock %}
+{% load dashboard %}
+
+{% block title %}{% trans 'JumpCloud Users' %}{% endblock %}
+{% block description %}{% trans 'The list of all JumpCloud users under the organization.' %}{% endblock %}
 
 {% block style %}{% endblock %}
 {% block javascript %}{% endblock %}
 
-{% block asana %}
+{% block jumpcloud %}
 <div class="col-md-12 mx-auto mt-3">
 
     <div class="row align-items-center">
@@ -20,9 +22,9 @@
         </div>
         <div class="col-auto mb-3 ml-auto">
             <div class="d-flex">
-                <form action="{% url 'dashboard_asana_users' %}" method="get" class="mx-2">
+                <form action="{% url 'dashboard_jumpcloud_users' %}" method="get" class="mx-2">
                     <div class="input-icon input-group">
-                        <input type="text" name="q" value="{{query}}" tabindex="1" autocomplete="off" class="form-control d-inline-block w-9" placeholder="{% trans 'Search Asana Users ...'%}">
+                        <input type="text" name="q" value="{{query}}" tabindex="1" autocomplete="off" class="form-control d-inline-block w-9" placeholder="{% trans 'Search JumpCloud Users ...'%}">
                         <span class="input-group-btn">
                             <button class="p-0 px-2 btn btn-black" type="submit">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
@@ -39,7 +41,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
                 <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"></path>
             </svg>
-            &nbsp;{% trans 'Asana Users' %}&nbsp;<span class="small">({{total}})</span>
+            &nbsp;{% trans 'JumpCloud Users' %}&nbsp;<span class="small">({{total}})</span>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -48,23 +50,42 @@
                         <tr>
                             <th class="text-left">{% trans 'Name' %}</th>
                             <th class="text-left">{% trans 'Email' %}</th>
-                            <th class="text-center">{% trans 'Active' %}</th>
-                            <th class="text-center">{% trans 'Admin' %}</th>
-                            <th class="text-center">{% trans 'Guest' %}</th>
-                            <th class="text-center">{% trans 'View Only' %}</th>
-                            <th class="text-center">{% trans 'Created' %}</th>
+                            <th class="text-center">{% trans 'Devices' %}</th>
+                            <th class="text-left">{% trans 'Employment' %}</th>
+                            <th class="text-left">{% trans 'MFA' %}</th>
+                            <th class="text-left">{% trans 'Created' %}</th>
+
                         </tr>
                     </thead>
                     <tbody>
                         {% for user in users %}
                         <tr>
-                            <td class="text-left">{{user.full_name}}</td>
+                            <td class="text-left tx-tooltip">
+                                {{user.full_name}}
+                                <span class="text-left"><b>{% if user.full_name %}{{user.full_name}}{% else %}{{user.email}}{% endif %}</b> <br> {{user.department}}</span>
+                            </td>
                             <td class="text-left">{{user.email}}</td>
-                            <td class="text-center"><span class="tx-bold">{{user.status}}</span></td>
-                            <td class="text-center">{{user.is_admin}}</td>
-                            <td class="text-center">{{user.is_guest}}</td>
-                            <td class="text-center">{{user.is_view_only}}</td>
-                            <td class="text-center">{{user.created|date:"j M Y"}}</td>
+                            <td class="text-center tx-tooltip">
+                                {{user.no_devices}}
+                               {% if user.devices %} <span class="text-left"><b>{% if user.full_name %}{{user.full_name}}{% else %}{{user.email}}{% endif %}</b><br>{% for device in user.devices|split:"," %}{{forloop.counter}}. {{device}}<br>{% endfor %}</span>{% endif %}
+                            </td>
+                            <td class="text-left tx-tooltip">
+                                {{user.employee_type}}
+                                <span class="text-left"><b>{% if user.full_name %}{{user.full_name}}{% else %}{{user.email}}{% endif %}</b> <br> {{user.location}}</span>
+                            </td>
+                            <td class="text-left tx-tooltip">
+                                {{user.mfa}}
+                                <span class="text-left">
+                                    <b>{% trans 'SUDO:' %}</b> {{user.sudo}} <br>
+                                    <b>{% trans 'TOTP:' %}</b> {{user.totp}} 
+                                </span>
+                            </td>
+                            <td class="text-left tx-tooltip">
+                                {{user.created|date:"j M Y"}}
+                                <span class="text-left">
+                                    <b>{% trans 'PassDate:' %}</b><br> {{user.pass_date|date:"j M Y"}}
+                                </span>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

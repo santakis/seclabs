@@ -8,6 +8,6 @@ from seclabs.audit import views as audit_views
 #////////////////////////////////////////////////////////////
 # Logs URLs
 urlpatterns = [
-    path('dashboard/audit/index/', audit_views.index, name='dashboard_audit_index')
+    path('dashboard/audit/', audit_views.index, name='dashboard_audit')
 ]
 
