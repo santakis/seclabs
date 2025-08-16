@@ -17,6 +17,7 @@ from seclabs.audit.logger import log_request
 
 #///////////////////////////////////////////////////////////////
 from seclabs.jumpcloud.models import JumpCloudUser
+from seclabs.jumpcloud.models import JumpCloudDevice
 
 #///////////////////////////////////////////////////////////////
 logger = logging.getLogger(__name__)
@@ -86,4 +87,58 @@ def jumpcloud_users(request):
     }
     return render(request, 'jumpcloud/dashboard/jumpcloud-users.html', response)
 
+#/////////////////////////////////////////////////////////////
+@never_cache
+@login_required
+def jumpcloud_devices(request):
+    """
+    The JumpCloud devices view within the seclabs dashboard.
+    """
+    log_request(request)
+
+    query = filters = ''
+
+    if request.GET and 'q' in request.GET:
+        query = " ".join(request.GET['q'].split())
+        search = True
+
+        devices = JumpCloudDevice.objects.filter(
+            Q(gid__icontains=query)|
+            Q(hostname__icontains=query)|
+            Q(display_name__icontains=query)|
+            Q(users__icontains=query) |
+            Q(os_name__icontains=query)|
+            Q(os_release__icontains=query)|
+            Q(os_revision__icontains=query) |
+            Q(os_version__icontains=query) |
+            Q(agent_version__icontains=query) |
+            Q(template_name__icontains=query) |
+            Q(has_policy__icontains=query)
+        ).order_by("-created")
+
+    if not query or (query and not devices):
+        devices = JumpCloudDevice.objects.order_by("-created")
+        search = False
+
+    paginator = Paginator(devices, settings.PAGES)
+    page = request.GET.get('page', 1)
+
+    try:
+        devices = paginator.page(page)
+    except InvalidPage:
+        devices = paginator.page(int(1))
+    except PageNotAnInteger:
+        esers = paginator.page(int(1))
+    except EmptyPage:
+        devices = paginator.page(int(1))
+
+    response = {
+        'query':query,
+        'search':search,
+        'devices':devices,
+        'total':paginator.count,
+        'pages':paginator.num_pages,
+        'page_range':range(1,paginator.num_pages+1),
+    }
+    return render(request, 'jumpcloud/dashboard/jumpcloud-devices.html', response)
 

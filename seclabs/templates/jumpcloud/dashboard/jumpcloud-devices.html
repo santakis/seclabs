@@ -5,8 +5,8 @@
 
 {% load dashboard %}
 
-{% block title %}{% trans 'JumpCloud Users' %}{% endblock %}
-{% block description %}{% trans 'The list of all JumpCloud users under the organization.' %}{% endblock %}
+{% block title %}{% trans 'JumpCloud Devices' %}{% endblock %}
+{% block description %}{% trans 'The list of all JumpCloud devices under the organization.' %}{% endblock %}
 
 {% block style %}{% endblock %}
 {% block javascript %}{% endblock %}
@@ -18,13 +18,13 @@
         <div class="col mb-3">
             {% if search %}<span class="bg-light text-dark p-2">{% trans 'The following results were found.' %}</span>{% endif %}
             {% if query and not search %}<span class="bg-light text-danger p-2">{% trans 'No results found.' %}</span>{% endif %}
-            {% if not search and not query %}{% if users %}<span class="text-muted pr-2">{% trans 'Last Updated:'%}</span>{{users.0.modified}}{% endif %}{% endif %}
+            {% if not search and not query %}{% if devices %}<span class="text-muted pr-2">{% trans 'Last Updated:'%}</span>{{devices.0.modified}}{% endif %}{% endif %}
         </div>
         <div class="col-auto mb-3 ml-auto">
             <div class="d-flex">
-                <form action="{% url 'dashboard_jumpcloud_users' %}" method="get" class="mx-2">
+                <form action="{% url 'dashboard_jumpcloud_devices' %}" method="get" class="mx-2">
                     <div class="input-icon input-group">
-                        <input type="text" name="q" value="{{query}}" tabindex="1" autocomplete="off" class="form-control d-inline-block w-9" placeholder="{% trans 'JumpCloud Users ...'%}">
+                        <input type="text" name="q" value="{{query}}" tabindex="1" autocomplete="off" class="form-control d-inline-block w-9" placeholder="{% trans 'JumpCloud Devices ...'%}">
                         <span class="input-group-btn">
                             <button class="p-0 px-2 btn btn-black" type="submit">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
@@ -41,57 +41,53 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
                 <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"></path>
             </svg>
-            &nbsp;{% trans 'JumpCloud Users' %}&nbsp;<span class="small">({{total}})</span>
+            &nbsp;{% trans 'JumpCloud Devices' %}&nbsp;<span class="small">({{total}})</span>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-vcenter table-mobile-md card-table">
                     <thead>
                         <tr>
-                            <th class="text-left">{% trans 'Name' %}</th>
-                            <th class="text-left">{% trans 'Email' %}</th>
-                            <th class="text-center">{% trans 'Devices' %}</th>
-                            <th class="text-left">{% trans 'Employment' %}</th>
-                            <th class="text-left">{% trans 'MFA' %}</th>
+                            <th class="text-left">{% trans 'Hostname' %}</th>
+                            <th class="text-center">{% trans 'Users' %}</th>
+                            <th class="text-left">{% trans 'Agent' %}</th>
+                            <th class="text-left">{% trans 'OS' %}</th>
                             <th class="text-left">{% trans 'Created' %}</th>
-
+                            <th class="text-left">{% trans 'Last Contact' %}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for user in users %}
+                        {% for device in devices %}
                         <tr>
-                            <td class="text-left tx-tooltip">
-                                {{user.full_name}}
-                                <span class="text-left"><b>{% if user.full_name %}{{user.full_name}}{% else %}{{user.email}}{% endif %}</b> <br> {{user.department}}</span>
-                            </td>
-                            <td class="text-left tx-tooltip">
-                                {{user.email}}
-                                 <span class="text-left">
-                                    <b>{% trans 'state:' %}</b> {{user.state}} <br>
-                                    <b>{% trans 'locked:' %}</b> {{user.locked}} <br>
-                                </span>
+                            <td class="text-left">
+                                {{device.hostname}}
                             </td>
                             <td class="text-center tx-tooltip">
-                                {{user.no_devices}}
-                               {% if user.devices %} <span class="text-left"><b>{% if user.full_name %}{{user.full_name}}{% else %}{{user.email}}{% endif %}</b><br>{% for device in user.devices|split:"," %}{{forloop.counter}}. {{device}}<br>{% endfor %}</span>{% endif %}
+                                {{device.no_users}}
+                               {% if device.users %} <span class="text-left"><b>{% if device.hostname %}{{device.hostname}}{% endif %}</b><br>{% for user in device.users|split:"," %}{{forloop.counter}}. {{user}}<br>{% endfor %}</span>{% endif %}
                             </td>
                             <td class="text-left tx-tooltip">
-                                {{user.employee_type}}
-                                <span class="text-left"><b>{% if user.full_name %}{{user.full_name}}{% else %}{{user.email}}{% endif %}</b> <br> {{user.location}}</span>
+                                {{device.agent_version}}
+                                 <span class="text-left">
+                                    <b>{% trans 'template:' %}</b> {{device.template_name}} <br>
+                                    <b>{% trans 'remote_ip:' %}</b> {{device.remote_ip}}
+                                </span>
                             </td>
-                            <td class="text-left tx-tooltip">
-                                {{user.mfa}}
-                                <span class="text-left">
-                                    <b>{% trans 'SUDO:' %}</b> {{user.sudo}} <br>
-                                    <b>{% trans 'TOTP:' %}</b> {{user.totp}} 
+                             <td class="text-left tx-tooltip">
+                                {{device.os_name}}
+                                 <span class="text-left">
+                                    <b>{% trans 'Release:' %}</b> {{device.os_release}} <br>
+                                    <b>{% trans 'Revision:' %}</b> {{device.os_revision}} <br>
+                                    <b>{% trans 'Version:' %}</b> {{device.os_version}} 
                                 </span>
                             </td>
                             <td class="text-left tx-tooltip">
-                                {{user.created|date:"j M Y"}}
-                                <span class="text-left">
-                                    <b>{% trans 'PassDate:' %}</b><br> {{user.pass_date|date:"j M Y"}}
-                                </span>
+                                {{device.created}}
                             </td>
+                            <td class="text-left">
+                                {{device.last_contact}}
+                            </td>
+ 
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -100,7 +96,7 @@
         </div>
     </div>
 
-    {% include "dashboard/dashboard-pagination.html" with pages=users search=search query=query page_range=page_range %}
+    {% include "dashboard/dashboard-pagination.html" with pages=devices search=search query=query page_range=page_range %}
 
 </div>
 {% endblock %}

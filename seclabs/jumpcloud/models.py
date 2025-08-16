@@ -111,3 +111,103 @@ class JumpCloudUser(models.Model):
 
         JumpCloudUser.objects.exclude(gid__in=ids).delete()
 
+#/////////////////////////////////////////////////////////////
+class JumpCloudDevice(models.Model):
+    """
+    The JumpCloudDevice model holds specific information
+    for JumpCloud devices.
+    """
+    gid = models.CharField(max_length=255, unique=True)
+    display_name = models.CharField(max_length=255)
+    hostname = models.CharField(max_length=255)
+    #--
+    users = models.TextField(blank=True,null=True)
+    no_users = models.IntegerField(default=0)
+    #--
+    os_name = models.CharField(max_length=255, blank=True,null=True)
+    os_release = models.CharField(max_length=255, blank=True,null=True)
+    os_revision = models.CharField(max_length=255, blank=True,null=True)
+    os_version = models.CharField(max_length=255, blank=True,null=True)
+    #--
+    remote_ip = models.CharField(max_length=255, blank=True, null=True)
+    template_name = models.CharField(max_length=255, blank=True,null=True)
+    agent_version = models.CharField(max_length=255, blank=True,null=True)
+    #--
+    has_policy = models.BooleanField(default=False)
+    #--
+    created = models.DateTimeField()
+    last_contact = models.DateTimeField()
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("JumpCloudDevice")
+        verbose_name_plural = _("JumpCloudDevice")
+
+    def __str__(self):
+        return self.hostname
+
+    #/////////////////////////////////////////////////////////////
+    def _device_users(self, device):
+        """
+        The _device_users method returns a tuple with the usernames
+        under the given device and the number of them.
+        """
+        users = set()
+
+        if self._safe_check(device, "userMetrics"):
+            for metric in device["userMetrics"]:
+                users.add(metric["userName"])
+
+        return ",".join(users), len(users)
+
+    #//////////////////////////////////////////
+    def _safe_check(self, dictionary, key):
+        """
+        The _safe_check method returns a dictionary value
+        if it exists, otherwise an empty string.
+        """
+        try:
+            data = dictionary[key]
+        except:
+            data = ""
+
+        return data
+
+    #/////////////////////////////////////////////////////////////
+    def update(self):
+        """
+        The class method update is responsible to update the records
+        for JumpCloud devices and their status.
+        """
+        devices = JumpCloud().get_devices()
+        ids = set()
+
+        for device in devices:
+
+            try:
+                ids.add(device["id"])
+                users, number = self._device_users(device)
+
+                defaults = {
+                    "gid": device["id"],
+                    "display_name": device["displayName"],
+                    "hostname": device["hostname"],
+                    "users": users,
+                    "no_users": number,
+                    "os_name": device["osVersionDetail"]["osName"],
+                    "os_release": device["osVersionDetail"]["releaseName"],
+                    "os_revision": device["osVersionDetail"]["revision"],
+                    "os_version": self._safe_check(device["osVersionDetail"], "version"),
+                    "remote_ip": self._safe_check(device, "remoteIP"),
+                    "template_name": device["templateName"],
+                    "agent_version": device["agentVersion"],
+                    "has_policy": device["isPolicyBound"],
+                    "created": make_aware(datetime.strptime(device["created"],"%Y-%m-%dT%H:%M:%S.%fZ")),
+                    "last_contact": make_aware(datetime.strptime(device["lastContact"],"%Y-%m-%dT%H:%M:%S.%fZ")),
+                }
+                JumpCloudDevice.objects.update_or_create(gid=device["id"], defaults=defaults)
+            except Exception as e:
+                logger.error(e)
+
+        JumpCloudDevice.objects.exclude(gid__in=ids).delete()
+

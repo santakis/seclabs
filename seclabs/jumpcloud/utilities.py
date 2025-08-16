@@ -3,6 +3,7 @@
 import logging
 #/////////////////////////////////////////////////////////////
 from seclabs.jumpcloud.models import JumpCloudUser
+from seclabs.jumpcloud.models import JumpCloudDevice
 
 #/////////////////////////////////////////////////////////////
 logger = logging.getLogger(__name__)
@@ -14,4 +15,4 @@ def jumpcloud_update_data():
     under jumpcloud app with latest available data.
     """
     JumpCloudUser().update()
-
+    JumpCloudDevice().update()
