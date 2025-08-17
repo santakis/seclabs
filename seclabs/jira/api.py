@@ -11,6 +11,8 @@ from django.conf import settings
 from datetime import datetime, timedelta
 
 #/////////////////////////////////////////////////////////////
+from seclabs.config.models import Config
+#-------------------------------------------------------------
 from seclabs.config.utilities import get_key
 
 #/////////////////////////////////////////////////////////////
@@ -35,7 +37,7 @@ class Jira:
         account, token = get_key("Jira", True)
         self.auth = HTTPBasicAuth(account, token)
         #---
-        self.api = settings.JIRA_SERVER_URL + "/rest/api/2/"
+        self.api = Config.load().jira_server + "/rest/api/2/"
 
     #//////////////////////////////////////////////
     def get_users(self, offset=0, data=[]):

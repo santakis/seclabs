@@ -21,6 +21,41 @@ SERVICES = (
     ('Cisco Umbrella', _('Cisco Umbrella')),
 )
 
+#/////////////////////////////////////////////////////////////////
+class SingletonModel(models.Model):
+    """
+    The SingletonModel class is a one instance db-modeling abstraction
+    for holding information such as configuration options.
+    """
+
+    class Meta:
+        abstract = True
+
+    #///////////////////////////////
+    def save(self, *args, **kwargs):
+        self.__class__.objects.exclude(id=self.id).delete()
+        super(SingletonModel, self).save(*args, **kwargs)
+
+    #///////////////////////////////
+    @classmethod
+    def load(cls):
+        try:
+            return cls.objects.get()
+        except cls.DoesNotExist:
+            return cls()
+
+#/////////////////////////////////////////////////////////////////
+class Config(SingletonModel):
+    """
+    The Config class holds organization level configuration options.
+    """
+    jira_server = models.CharField(max_length=255, null=True, blank=True)
+    github_org = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('Config')
+        verbose_name_plural = _('Configs')
+
 #/////////////////////////////////////////////////////////////
 class AccessKey(models.Model):
     """

@@ -9,6 +9,14 @@ from seclabs.config.widgets import *
 #///////////////////////////////////////////////////////////////
 from seclabs.config.models import AccessKey, SERVICES
 
+#/////////////////////////////////////////////////////////////////
+class ConfigForm(forms.Form):
+
+    use_required_attribute = False
+ 
+    jira_server = forms.CharField(max_length=256, widget=w_jira_server)
+    github_org = forms.CharField(max_length=256, widget=w_github_org)
+
 #///////////////////////////////////////////////////////////////
 class AccessKeyForm(forms.Form):
 

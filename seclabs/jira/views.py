@@ -54,10 +54,10 @@ def jira_users(request):
             Q(account_type__icontains=query)|
             Q(status__icontains=query)|
             Q(groups__icontains=query)
-        ).order_by("status")
+        ).order_by("full_name")
         
     if not query or (query and not users):
-        users = JiraUser.objects.order_by("status")
+        users = JiraUser.objects.order_by("full_name")
         search = False
  
     paginator = Paginator(users, settings.PAGES)

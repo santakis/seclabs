@@ -17,6 +17,11 @@ from django.views.decorators.cache import never_cache
 from seclabs.audit.logger import log_request
 
 #///////////////////////////////////////////////////////////////
+from seclabs.config.forms import ConfigForm
+#---------------------------------------------------------------
+from seclabs.config.actions import edit_config
+from seclabs.config.actions import update_config
+#---------------------------------------------------------------
 from seclabs.config.models import AccessKey
 from seclabs.config.forms import AccessKeyForm
 #---------------------------------------------------------------
@@ -29,6 +34,36 @@ from seclabs.users.decorators import superuser_required
 
 #///////////////////////////////////////////////////////////////
 logger = logging.getLogger(__name__)
+
+#/////////////////////////////////////////////////////////////////
+@never_cache
+@login_required
+def config_index(request):
+    """
+    The view config_index updates the organization level
+    configuration options.
+    """
+ 
+    log_request(request)
+    
+    form = edit_config(request)
+    
+    if not form :    
+        logger.critical("Could not retrieve Configuration form.")
+        raise Http404
+
+    if request.method == 'POST':
+
+        form = ConfigForm(request.POST)
+
+        if form.is_valid():
+            update_config(
+                form.cleaned_data['jira_server'],
+                form.cleaned_data['github_org'])
+
+            return redirect('dashboard_index')
+ 
+    return render(request,'config/dashboard/config-index.html', {'form':form,})
 
 #///////////////////////////////////////////////////////////////
 @never_cache

@@ -1,0 +1,97 @@
+{% extends "seclabs-dashboard-theme.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'Configuration' %}{% endblock %}
+{% block description %}{% trans 'The seclabs view for Configuration options.' %}{% endblock %}
+
+{% block style %}{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% block dashboard %}
+<div class="container">
+    <div class="az-content-body">
+        <div class="az-dashboard-nav">
+            <nav class="nav">
+                <a class="nav-link" href="{% url 'dashboard_config' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path><circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    &nbsp;<span>{% trans 'Configuration' %}</span>
+                </a>
+                <a class="nav-link" href="{% url 'dashboard_accesskeys' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-lock2" viewBox="0 0 16 16">
+                        <path d="M10 7v1.076c.54.166 1 .597 1 1.224v2.4c0 .816-.781 1.3-1.5 1.3h-3c-.719 0-1.5-.484-1.5-1.3V9.3c0-.627.46-1.058 1-1.224V7a2 2 0 1 1 4 0zM7 7v1h2V7a1 1 0 0 0-2 0z"></path>  
+                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"></path>
+                    </svg>
+                    &nbsp;<span>{% trans 'Access Keys' %}</span>
+                </a>
+           </nav>
+        </div>
+    </div>
+</div>
+
+<div class="container">     
+    
+    {% block config %}
+    <div class="col-8 mx-auto mt-3">
+        <form class="card" action={% url 'dashboard_config' %} method="post" novalidate>{% csrf_token %}
+            <div class="card-header text-center lead bd-0 tx-white bg-black-9">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path><circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                &nbsp;{% trans 'Edit Config' %}
+            </div>
+            <div class="card-body border-bottom py-3">
+                <div class="row">
+                    <div class="col-md-12 mx-auto">
+                        <fieldset class="row form-fieldset">
+                            <div class="col-md-6 mr-auto">
+                                <div class="mb-3">
+                                    <label class="form-label">{% trans 'Jira Server' %}</label>
+                                    {{form.jira_server}}
+                                    {% if form.jira_server.errors %}
+                                    <span class="small text-red" id="e_jira_server">{{form.jira_server.errors}}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">{% trans 'Github Org' %}</label>
+                                    {{form.github_org}}
+                                    {% if form.github_org.errors %}
+                                    <span class="small text-red" id="e_github_org">{{form.github_org.errors}}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                       </fieldset>
+                   </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-md-12 text-right">
+                        <a href="{% url 'dashboard_index'%}" class="btn btn-light d-block d-md-inline-block mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                            &nbsp;{% trans 'Cancel' %}
+                        </a>
+                        <button type="submit" class="full-width btn btn-black d-block d-md-inline-block mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save" viewBox="0 0 16 16">
+                                <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
+                            </svg>
+                            &nbsp;{% trans 'Save Changes' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endblock %}              
+
+</div>
+{% endblock %}
+ 
