@@ -1,0 +1,76 @@
+{% extends "github/dashboard/github-index.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% load dashboard %}
+
+{% block title %}{% trans 'Github Teams' %}{% endblock %}
+{% block description %}{% trans 'The list of all Github teams under the organization.' %}{% endblock %}
+
+{% block style %}{% endblock %}
+{% block javascript %}{% endblock %}
+ 
+{% block github %}
+<div class="col-md-12 mx-auto mt-3">
+
+    <div class="row align-items-center">
+        <div class="col mb-3">
+            {% if search %}<span class="bg-light text-dark p-2">{% trans 'The following results were found.' %}</span>{% endif %}
+            {% if query and not search %}<span class="bg-light text-danger p-2">{% trans 'No results found.' %}</span>{% endif %}
+            {% if not search and not query %}{% if teams %}<span class="text-muted pr-2">{% trans 'Last Updated:'%}</span><span class="tx-dark">{{teams.0.modified}}</span>{% endif %}{% endif %}
+        </div>
+        <div class="col-auto mb-3 ml-auto">
+            <div class="d-flex">
+                <form action="{% url 'dashboard_github_teams' %}" method="get" class="mx-2">
+                    <div class="input-icon input-group">
+                        <input type="text" name="q" value="{{query}}" tabindex="1" autocomplete="off" class="form-control d-inline-block w-9" placeholder="{% trans 'Github Teams ...'%}">
+                        <span class="input-group-btn">
+                            <button class="p-0 px-2 btn btn-black" type="submit">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
+                             </button>
+                        </span>
+                    </div>
+                </form>
+           </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header text-center lead bd-0 tx-white bg-black-9">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-rolodex" viewBox="0 0 16 16">
+                <path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+                <path d="M1 1a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h.5a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h.5a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H6.707L6 1.293A1 1 0 0 0 5.293 1H1Zm0 1h4.293L6 2.707A1 1 0 0 0 6.707 3H15v10h-.085a1.5 1.5 0 0 0-2.4-.63C11.885 11.223 10.554 10 8 10c-2.555 0-3.886 1.224-4.514 2.37a1.5 1.5 0 0 0-2.4.63H1V2Z"/>
+            </svg>
+            &nbsp;{% trans 'Teams' %}&nbsp;<span class="small">({{total}})</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-vcenter table-mobile-md card-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-10">{% trans 'No Members' %}</th>
+                            <th class="text-left w-25">{% trans 'Name' %}</th>
+                            <th class="text-left">{% trans 'Parent Team' %}</th>
+                            <th class="text-left">{% trans 'Team ID' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for team in teams %}
+                        <tr>
+                            <td class="text-center font-weight-medium">{{team.team_members}}</td>
+                            <td class="text-left"><a href="{{team.html_url}}" target="_blank">{{team.name}}</a></td>
+                            <td class="text-left">{{team.parent_team}}</td>
+                            <td class="text-left">{{team.team_id}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% include "dashboard/dashboard-pagination.html" with pages=teams search=search query=query page_range=page_range %}
+
+</div>
+{% endblock %}

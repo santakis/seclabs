@@ -1,0 +1,93 @@
+{% extends "github/dashboard/github-index.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% load dashboard %}
+
+{% block title %}{% trans 'Github Members' %}{% endblock %}
+{% block description %}{% trans 'The list of all Github members under the organization.' %}{% endblock %}
+
+{% block style %}{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% block github %}
+<div class="col-md-12 mx-auto mt-3">
+
+    <div class="row align-items-center">
+        <div class="col mb-3">
+            {% if search %}<span class="bg-light text-dark p-2">{% trans 'The following results were found.' %}</span>{% endif %}
+            {% if query and not search %}<span class="bg-light text-danger p-2">{% trans 'No results found.' %}</span>{% endif %}
+            {% if not search and not query %}{% if members %}<span class="text-muted pr-2">{% trans 'Last Updated:'%}</span><span class="tx-dark">{{members.0.modified}}</span>{% endif %}{% endif %}
+        </div>
+        <div class="col-auto mb-3 ml-auto">
+            <div class="d-flex">
+                <form action="{% url 'dashboard_github_members' %}" method="get" class="mx-2">
+                    <div class="input-icon input-group">
+                        <input type="text" name="q" value="{{query}}" tabindex="1" autocomplete="off" class="form-control d-inline-block w-9" placeholder="{% trans 'Github Members ...'%}">
+                        <span class="input-group-btn">
+                            <button class="p-0 px-2 btn btn-black" type="submit">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
+                             </button>
+                        </span>
+                    </div>
+                </form>
+           </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header text-center lead bd-0 tx-white bg-black-9">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"></path>
+            </svg>
+            &nbsp;{% trans 'Members' %}&nbsp;<span class="small">({{total}})</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-vcenter table-mobile-md card-table">
+                    <thead>
+                        <tr>
+                            <th class="w-25 text-left">{% trans 'Name' %}</th>
+                            <th class="w-25 text-left">{% trans 'Username' %}</th>
+                            <th class="text-center">{% trans 'Site Admin' %}</th>
+                            <th class="text-center">{% trans 'Type' %}</th>
+                            <th class="text-center">{% trans 'View Type' %}</th>
+                            <th class="text-left">{% trans 'Member ID' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in members %}
+                        <tr>
+                            <td class="text-left">
+                                {% if member.avatar_url %}
+                                <img src="{{member.avatar_url}}" alt="User Avatar" width="24" height="24"  class="rounded-circle">
+                                {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-emoji-smile" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/>
+                                </svg>
+                                {% endif %}
+                                <a class="pl-2" href="{{member.html_url}}" target="_blank">{{member.name}}</a>
+                            </td>
+                            <td class="text-left">
+                                <div class="badge p-2 bg-light text-pink" style="text-transform:none;font-size:13px;">
+                                    <a class="pl-2" href="{{member.html_url}}" target="_blank">@{{member.login}}</a>
+                                </div>
+                            </td>
+                            <td class="text-center">{{member.site_admin}}</td>
+                            <td class="text-center">{{member.member_type}}</td>
+                            <td class="text-center">{{member.member_view_type}}</td>
+                            <td class="text-left">{{member.member_id}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% include "dashboard/dashboard-pagination.html" with pages=members search=search query=query page_range=page_range %}
+
+</div>
+{% endblock %}

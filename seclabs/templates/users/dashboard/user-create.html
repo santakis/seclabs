@@ -1,4 +1,4 @@
-{% extends "seclabs-dashboard-theme.html" %}
+{% extends "users/dashboard/users-index.html" %}
 
 {% load static %}
 {% load i18n %}
@@ -9,7 +9,7 @@
 {% block style %}{% endblock %}
 {% block javascript %}{% endblock %}
 
-{% block dashboard %}
+{% block users %}
 <div class="container">
     <div class="col-8 mx-auto mt-3">
         <form class="card" action={% url 'dashboard_users_create' %} method="post" novalidate>{% csrf_token %}

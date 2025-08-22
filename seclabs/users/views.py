@@ -14,7 +14,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 #---------------------------------------------------------------
-from seclabs.audit.logger import log_request
+from seclabs.users.logger import log_request
 
 #///////////////////////////////////////////////////////////////
 from django.contrib.auth.models import User
@@ -28,19 +28,20 @@ from seclabs.users.actions import create_user
 from seclabs.users.actions import update_user
 from seclabs.users.actions import update_password
 #---------------------------------------------------------------
+from seclabs.users.models import AuditLog
+#---------------------------------------------------------------
 from seclabs.users.helpers import cascade_models
 from seclabs.users.decorators import superuser_required
 
 #///////////////////////////////////////////////////////////////
 logger = logging.getLogger(__name__)
 
-#///////////////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////
 @never_cache
 @login_required
 def users_index(request):
     """
-    The view users_index shows the list of existing Users
-    inside the platform.
+    The main index page for Users app within the seclabs dashboard.
     """
     log_request(request)
 
@@ -249,4 +250,52 @@ def users_erase(request, id):
     except User.DoesNotExist:
         logger.critical("User ID was not found: " + str(id))
         raise Http404
-            
+
+#/////////////////////////////////////////////////////////////
+@never_cache
+@login_required
+@superuser_required
+def users_audit(request):
+    """
+    The view users_audit shows the auditing logs of Users that 
+    accessed seclabs platform.
+    """
+    query = ''
+
+    if request.GET and 'q' in request.GET:
+        query = " ".join(request.GET['q'].split())
+        auditlogs = AuditLog.objects.filter(
+                Q(first_name__icontains=query)|
+                Q(last_name__icontains=query)|
+                Q(username__icontains=query)|
+                Q(request_path__icontains=query)|
+                Q(method__icontains=query)
+            ).order_by("-timestamp")
+        search = True
+
+    if not query or (query and not auditlogs):
+        auditlogs = AuditLog.objects.order_by("-timestamp")
+        search = False
+
+    paginator = Paginator(auditlogs, settings.PAGES)
+    page = request.GET.get('page', 1)
+
+    try:
+        auditlogs = paginator.page(page)
+    except InvalidPage:
+        auditlogs = paginator.page(int(1))
+    except PageNotAnInteger:
+        auditlogs = paginator.page(int(1))
+    except EmptyPage:
+        auditlogs = paginator.page(int(1))
+
+    response = {
+        'auditlogs':auditlogs,
+        'query':query,
+        'search':search,
+        'total':paginator.count,
+        'pages':paginator.num_pages,
+        'page_range':range(1,paginator.num_pages+1),
+    }
+    return render(request, 'users/dashboard/users-audit.html', response)
+

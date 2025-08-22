@@ -13,7 +13,7 @@ from django.views.decorators.cache import never_cache
 from django.core.paginator import Paginator, InvalidPage
 from django.core.paginator import EmptyPage, PageNotAnInteger
 #---------------------------------------------------------------
-from seclabs.audit.logger import log_request
+from seclabs.users.logger import log_request
 
 #///////////////////////////////////////////////////////////////
 from seclabs.jumpcloud.models import JumpCloudUser

@@ -14,7 +14,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 #---------------------------------------------------------------
-from seclabs.audit.logger import log_request
+from seclabs.users.logger import log_request
 
 #///////////////////////////////////////////////////////////////
 from seclabs.config.forms import ConfigForm

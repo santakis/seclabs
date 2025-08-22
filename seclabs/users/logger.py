@@ -2,7 +2,7 @@
 
 import logging
 #/////////////////////////////////////////////////////////////////
-from seclabs.audit.models import AuditLogs 
+from seclabs.users.models import AuditLog
 
 #/////////////////////////////////////////////////////////////////
 logger = logging.getLogger(__name__)
@@ -16,18 +16,18 @@ def log_request(request):
     """
     try:
         if request.user.is_authenticated:
-            auditlogs = AuditLogs()
-            auditlogs.first_name = request.user.first_name
-            auditlogs.last_name = request.user.last_name
-            auditlogs.is_superuser = request.user.is_superuser
-            auditlogs.username = request.user
+            auditlog = AuditLog()
+            auditlog.first_name = request.user.first_name
+            auditlog.last_name = request.user.last_name
+            auditlog.is_superuser = request.user.is_superuser
+            auditlog.username = request.user
 
             if request.META['REMOTE_ADDR']:
-                auditlogs.ipaddress = request.META['REMOTE_ADDR']
+                auditlog.ipaddress = request.META['REMOTE_ADDR']
 
-            auditlogs.request_path = request.path
-            auditlogs.method = request.META['REQUEST_METHOD']
-            auditlogs.save()
+            auditlog.request_path = request.path
+            auditlog.method = request.META['REQUEST_METHOD']
+            auditlog.save()
     except Exception as e:
         logger.error(e)
 

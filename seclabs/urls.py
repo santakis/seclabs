@@ -11,11 +11,11 @@ import django.contrib.auth.views as auth_views
 #////////////////////////////////////////////////////////////
 # Application URLs
 urlpatterns = [
-    path('', include('seclabs.audit.urls')),
     path('', include('seclabs.users.urls')),
     path('', include('seclabs.config.urls')),
     path('', include('seclabs.jira.urls')),
     path('', include('seclabs.asana.urls')),
+    path('', include('seclabs.github.urls')),
     path('', include('seclabs.jumpcloud.urls')),
     path('', include('seclabs.dashboard.urls')),
 ]

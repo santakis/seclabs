@@ -1,0 +1,92 @@
+{% extends "github/dashboard/github-index.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% load dashboard %}
+
+{% block title %}{% trans 'Pull Requests' %} | {{repository.full_name}}{% endblock %}
+{% block description %}{% trans 'The list of Pull Requests for repository' %} {{repository.full_name}}{% endblock %}
+
+{% block style %}{% endblock %}
+{% block javascript %}{% endblock %}
+ 
+{% block header %}
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-code" viewBox="0 0 16 16">
+    <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"></path>
+</svg>
+{{repository.full_name}}
+{% endblock %}
+
+{% block github %}
+<div class="col-md-12 mx-auto mt-3">
+
+    <div class="row align-items-center">
+        <div class="col mb-3">
+            {% if search %}<span class="bg-light text-dark p-2">{% trans 'The following results were found.' %}</span>{% endif %}
+            {% if query and not search %}<span class="bg-light text-danger p-2">{% trans 'No results found.' %}</span>{% endif %}
+            {% if not search and not query %}{% if pull_requests %}<span class="text-muted pr-2">{% trans 'Last Updated:'%}</span><span class="tx-dark">{{pull_requests.0.modified}}</span>{% endif %}{% endif %}
+        </div>
+        <div class="col-auto mb-3 ml-auto">
+            <div class="d-flex">
+                <form action="{% url 'dashboard_github_repo_pull_requests' repository.repo_id %}" method="get" class="mx-2">
+                    <div class="input-icon input-group">
+                        <input type="text" name="q" value="{{query}}" tabindex="1" autocomplete="off" class="form-control d-inline-block w-9" placeholder="{% trans 'Repository PRs ...'%}">
+                        <span class="input-group-btn">
+                            <button class="p-0 px-2 btn btn-black" type="submit">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
+                             </button>
+                        </span>
+                    </div>
+                </form>
+           </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header text-center lead bd-0 tx-white bg-black-9">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-grid-3x3-gap" viewBox="0 0 16 16">
+                <path d="M4 2v2H2V2h2zm1 12v-2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1zm0-5V7a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1zm0-5V2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1zm5 10v-2a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1zm0-5V7a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1zm0-5V2a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1zM9 2v2H7V2h2zm5 0v2h-2V2h2zM4 7v2H2V7h2zm5 0v2H7V7h2zm5 0h-2v2h2V7zM4 12v2H2v-2h2zm5 0v2H7v-2h2zm5 0v2h-2v-2h2zM12 1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zm-1 6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V7zm1 4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2z"></path>
+            </svg>
+            &nbsp;{% trans 'Pull Requests' %}&nbsp;<span class="small">({{total}})</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-vcenter table-mobile-md card-table">
+                    <thead>
+                        <tr>
+                            <th class="text-left">{% trans 'User' %}</th>
+                            <th class="text-left">{% trans 'Title' %}</th>
+                            <th class="text-left">{% trans 'Created' %}</th>
+                            <th class="text-left">{% trans 'Updated' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pull_request in pull_requests %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'dashboard_github_members' %}?q={{pull_request.user_login}}">
+                                    <div class="badge p-2 bg-light text-pink" style="text-transform:none;font-size:13px;">
+                                        @{{pull_request.user_login}}
+                                    </div>
+                                </a>
+                            </td>
+                            <td>
+                                <a target="_blank" href="{{pull_request.html_url}}">
+                                    {{pull_request.title|truncatechars:55}}
+                                </a>
+                            </td>
+                            <td>{{pull_request.created_at}}</td>
+                            <td>{{pull_request.updated_at}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% include "dashboard/dashboard-pagination.html" with pages=pull_requests search=search query=query page_range=page_range %}
+
+</div>
+{% endblock %}

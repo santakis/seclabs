@@ -24,7 +24,7 @@ class Asana:
         The constructor initializes a asana instance.
         """
         self.headers = dict()
-        self.headers['Authorization'] = get_key("Asana", False)
+        self.headers['Authorization'] = get_key("Asana")
         self.headers['Accept'] = "application/json"
         self.api = "https://app.asana.com/api/1.0/"
  

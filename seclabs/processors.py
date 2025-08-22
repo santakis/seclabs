@@ -2,6 +2,8 @@
 
 #////////////////////////////////////////////////////////////
 from django.conf import settings
+#////////////////////////////////////////////////////////////
+from seclabs.config.models import Config
 
 #////////////////////////////////////////////////////////////
 # Context processor for SITE_URL
@@ -32,4 +34,14 @@ def site_docs(request):
     avalaible to all project templates.
     """
     return {'SITE_DOCS': settings.SITE_DOCS}
+
+#////////////////////////////////////////////////////////////
+# Context processor for GITHUB_ORG
+def github_org(request):
+    """
+    The github_org method is a contenxt processor for GITHUB_ORG.
+    The variable is defined under Config model by the user and it 
+    becomes avalaible to all project templates.
+    """
+    return {'GITHUB_ORG': Config().load().github_org}
 

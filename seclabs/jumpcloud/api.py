@@ -24,7 +24,7 @@ class JumpCloud:
         The constructor initializes a asana instance.
         """
         self.headers = dict()
-        self.headers['x-api-key'] = get_key("JumpCloud", False)
+        self.headers['x-api-key'] = get_key("JumpCloud")
         self.headers['Accept'] = "application/json"
         self.api = "https://console.jumpcloud.com/api/"
  

@@ -8,9 +8,8 @@ from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 #-------------------------------------------------------------
-from seclabs.audit.logger import log_request
-#-------------------------------------------------------------
-#from seclabs.users.decorators import superuser_required
+from seclabs.users.logger import log_request
+from seclabs.users.decorators import superuser_required
 
 #/////////////////////////////////////////////////////////////
 logger = logging.getLogger(__name__)
