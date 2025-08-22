@@ -184,7 +184,7 @@ class Github(object):
     
         try:
             response = requests.get(self.api + url + opts, headers=self.headers)
-            logger.info(response)
+
             for entry in response.json():
                 data.append(entry)
 
