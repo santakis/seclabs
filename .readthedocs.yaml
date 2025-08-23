@@ -16,7 +16,7 @@ sphinx:
 
 # Optionally, but recommended,
 #///////////////////////////////////////////////////
- python:
+python:
     install:
     - requirements: docs/requirements.txt
 
