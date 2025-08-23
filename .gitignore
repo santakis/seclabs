@@ -28,6 +28,7 @@ db.sqlite3-journal
 style/
 #---
 *.log
+.*log.*
 logs/
 #---
 .env
@@ -42,5 +43,8 @@ secrets.yml
 #---
 .DS_Store
 .Trashes
+_build
+_static
+_templates
 #---
 .cache
