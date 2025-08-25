@@ -254,13 +254,11 @@ class Dependabot(models.Model):
     severity = models.CharField(max_length=255)
     score = models.DecimalField(max_digits=3, decimal_places=1, default=0.0)
     patched = models.CharField(max_length=255)
-    identifiers = models.CharField(max_length=255, blank=True, null=True)
-    link = models.CharField(max_length=255, blank=True, null=True)
-    path = models.CharField(max_length=255, blank=True, null=True)
+    ghsa_id = models.CharField(max_length=255, blank=True, null=True)
+    html_url = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField()
     modified = models.DateTimeField(auto_now=True)
     repo_id = models.CharField(max_length=255)
-    jira_id = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         verbose_name = _("Dependabot")
@@ -276,7 +274,39 @@ class Dependabot(models.Model):
         The class method update is responsible to update the records 
         to map the existing vulnerability alerts from Dependabot.
         """
-        ids = set()
+        ids = dict()
         dependabots = Github().get_dependabots()
-        #TODO
+
+        for dependabot in dependabots:
+
+            if dependabot["repository"]["id"] in ids:
+                ids[dependabot["repository"]["id"]].add(dependabot["security_advisory"]["cve_id"])
+            else:
+                ids[dependabot["repository"]["id"]] = set([dependabot["security_advisory"]["cve_id"],])
+
+            try:
+                defaults = {
+                    'vuln_id': dependabot["security_advisory"]["cve_id"],
+                    'package': dependabot["security_vulnerability"]["package"]["name"],
+                    'summary': dependabot["security_advisory"]["summary"],
+                    'description': dependabot["security_advisory"]["description"],
+                    'state': dependabot["state"],
+                    'severity': dependabot["security_vulnerability"]["severity"],
+                    'score': dependabot["security_advisory"]["cvss"]["score"],
+                    'patched': dependabot["security_vulnerability"]["first_patched_version"]["identifier"],
+                    'ghsa_id': dependabot["security_advisory"]["ghsa_id"],
+                    'html_url': dependabot["html_url"],
+                    'created_at': make_aware(datetime.strptime(dependabot["security_advisory"]["published_at"],"%Y-%m-%dT%H:%M:%SZ")),
+                    'repo_id':dependabot["repository"]["id"],
+                }
+                Dependabot.objects.update_or_create(
+                    vuln_id=dependabot["security_advisory"]["cve_id"],
+                    repo_id=dependabot["repository"]["id"],
+                    defaults=defaults
+                )
+            except Exception as e:
+                logger.error(e)
+
+        for repo_id, cve_ids in ids.items():
+            Dependabot.objects.filter(repo_id=repo_id).exclude(vuln_id__in=cve_ids).delete()
 

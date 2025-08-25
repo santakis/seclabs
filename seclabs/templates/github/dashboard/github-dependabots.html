@@ -4,6 +4,7 @@
 {% load i18n %}
 
 {% load dashboard %}
+{% load github %}
 
 {% block title %}{% trans 'Github Dependabots' %}{% endblock %}
 {% block description %}{% trans 'The list of all Github dependabots under the organization.' %}{% endblock %}
@@ -52,24 +53,39 @@
                 <table class="table table-vcenter table-mobile-md card-table">
                     <thead>
                         <tr> 
-                            <th class="w-25 text-left">{% trans 'Package' %}</th>
-                            <th class="w-25 text-left">{% trans 'State' %}</th>
+                            <th class="w-25 text-left">{% trans 'CVE' %}</th>
+                            <th class="w-25 text-left">{% trans 'GHSA' %}</th>
+                            <th class="w-25 text-left">{% trans 'Repository' %}</th>
+                            <th class="text-left">{% trans 'Package' %}</th>
+                            <th class="text-center">{% trans 'State' %}</th>
                             <th class="text-center">{% trans 'Severity' %}</th>
-                            <th class="text-center">{% trans 'Score' %}</th>
-                            <th class="text-center">{% trans 'Identifiers' %}</th>
-                            <th class="text-center">{% trans 'Patched' %}</th>
-                            <th class="text-left">{% trans 'created_at' %}</th>
+                            <th class="w-10 text-left">{% trans 'created_at' %}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for dependabot in dependabots %}
                         <tr>
-                            <td class="text-left"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-left"></td>
+                            <td class="text-left tx-tooltip">
+                                {{dependabot.vuln_id}}
+                                <span>{{dependabot.summary}}</span>
+                            </td>
+                            <td class="text-left tx-tooltip">
+                                <a href="https://github.com/advisories/{{dependabot.ghsa_id}}">{{dependabot.ghsa_id}}</a>
+                                <span>{{dependabot.description}}</span>
+                            </td>
+                            <td class="text-left">
+                                <a href="{{dependabot.html_url}}">{{dependabot.repo_id|get_repo_name}}</a>
+                            </td>
+                            <td class="text-left tx-tooltip">
+                                {{dependabot.package}}
+                                <span>Patched: <b>{{dependabot.patched}}</b></span>
+                            </td>
+                            <td class="text-center">{{dependabot.state}}</td>
+                            <td class="text-center tx-tooltip">
+                                {{dependabot.severity}}
+                                <span>Score: <b>{{dependabot.score}}</b></span>
+                            </td>
+                           <td class="text-left">{{dependabot.created_at}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

@@ -215,7 +215,6 @@ PAGES = 36
 # Filename/Path for Logger
 LOG_FILE = ROOT_DIR + '/seclabs.log'
 LOG_SIZE =  5242880 # (5MB)
-LOG_PER_PAGE  = 50 # Paginator
 
 #/////////////////////////////////////////////////////////////////
 # Disabled logging

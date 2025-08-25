@@ -8,9 +8,6 @@ from django.template import Library
 from django.template.defaultfilters import stringfilter
 #-------------------------------------------------------------
 from seclabs.github.models import Repository
-from seclabs.github.models import Member
-from seclabs.github.models import PullRequest
-from seclabs.github.models import Dependabot
 #-------------------------------------------------------------
 from seclabs.config.models import Config 
 
@@ -21,4 +18,14 @@ logger = logging.getLogger(__name__)
 register = Library()
 
 #/////////////////////////////////////////////////////////////////
-# placeholder
+@register.filter(name='get_repo_name')
+def get_repo_name(value):
+    """
+    Get the repo name from an id. If exception occurs, return empty string.
+    """
+    try:
+        full_name = Repository.objects.get(repo_id=value).full_name
+        return full_name.rsplit("/", 1)[-1]
+    except:
+        return ""
+
